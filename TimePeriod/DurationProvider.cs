@@ -8,20 +8,17 @@
 // --------------------------------------------------------------------------
 using System;
 
-namespace Itenso.TimePeriod
-{
+namespace Itenso.TimePeriod {
 
-	// ------------------------------------------------------------------------
-	public class DurationProvider : IDurationProvider
-	{
+    // ------------------------------------------------------------------------
+    public class DurationProvider : IDurationProvider {
 
-		// ----------------------------------------------------------------------
-		public virtual TimeSpan GetDuration( DateTime start, DateTime end )
-		{
-			return end.Subtract( start );
-		} // GetDuration
+        // ----------------------------------------------------------------------
+        public virtual TimeSpan GetDuration (DateTime start, DateTime end) {
+            return end.Subtract (start);
+        } // GetDuration
 
-	} // class DurationProvider
+    } // class DurationProvider
 
 } // namespace Itenso.TimePeriod
 // -- EOF -------------------------------------------------------------------

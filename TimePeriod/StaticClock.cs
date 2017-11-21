@@ -8,30 +8,26 @@
 // --------------------------------------------------------------------------
 using System;
 
-namespace Itenso.TimePeriod
-{
+namespace Itenso.TimePeriod {
 
-	// ------------------------------------------------------------------------
-	public class StaticClock : IClock
-	{
+    // ------------------------------------------------------------------------
+    public class StaticClock : IClock {
 
-		// ----------------------------------------------------------------------
-		public StaticClock( DateTime now )
-		{
-			this.now = now;
-		} // StaticClock
+        // ----------------------------------------------------------------------
+        public StaticClock (DateTime now) {
+            this.now = now;
+        } // StaticClock
 
-		// ----------------------------------------------------------------------
-		public DateTime Now
-		{
-			get { return now; }
-		} // Now
+        // ----------------------------------------------------------------------
+        public DateTime Now {
+            get { return now; }
+        } // Now
 
-		// ----------------------------------------------------------------------
-		// members
-		private readonly DateTime now;
+        // ----------------------------------------------------------------------
+        // members
+        private readonly DateTime now;
 
-	} // class StaticClock
+    } // class StaticClock
 
 } // namespace Itenso.TimePeriod
 // -- EOF -------------------------------------------------------------------

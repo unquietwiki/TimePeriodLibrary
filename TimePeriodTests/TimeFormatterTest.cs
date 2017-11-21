@@ -18,7 +18,7 @@ namespace Itenso.TimePeriodTests
 	public sealed class TimeFormatterTest : TestUnitBase
 	{
 
-#if (!NETCOREAPP1_1)
+#if (!netcoreapp2.0)
         // ----------------------------------------------------------------------
         [Trait("Category", "TimeFormatter")]
         [Fact]

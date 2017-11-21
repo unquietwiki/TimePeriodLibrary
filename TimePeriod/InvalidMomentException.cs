@@ -11,70 +11,61 @@ using System;
 using System.Runtime.Serialization;
 #endif
 
-namespace Itenso.TimePeriod
-{
+namespace Itenso.TimePeriod {
 
     // ------------------------------------------------------------------------
 #if (NET35 || NET40 || NET45 || NET46)
-	[Serializable]
+    [Serializable]
 #endif
-    public class InvalidMomentException : Exception
-	{
+    public class InvalidMomentException : Exception {
 
-		// ----------------------------------------------------------------------
-		public InvalidMomentException( DateTime moment )
-		{
-			this.moment = moment;
-		} // InvalidMomentException
+        // ----------------------------------------------------------------------
+        public InvalidMomentException (DateTime moment) {
+            this.moment = moment;
+        } // InvalidMomentException
 
-		// ----------------------------------------------------------------------
-		public InvalidMomentException( DateTime moment, string message ) :
-			base( message )
-		{
-			this.moment = moment;
-		} // InvalidMomentException
+        // ----------------------------------------------------------------------
+        public InvalidMomentException (DateTime moment, string message):
+            base (message) {
+                this.moment = moment;
+            } // InvalidMomentException
 
-		// ----------------------------------------------------------------------
-		public InvalidMomentException( DateTime moment, Exception cause ) :
-			base( cause.Message, cause )
-		{
-			this.moment = moment;
-		} // InvalidMomentException
+        // ----------------------------------------------------------------------
+        public InvalidMomentException (DateTime moment, Exception cause):
+            base (cause.Message, cause) {
+                this.moment = moment;
+            } // InvalidMomentException
 
-		// ----------------------------------------------------------------------
-		public InvalidMomentException( DateTime moment, string message, Exception cause ) :
-			base( message, cause )
-		{
-			this.moment = moment;
-		} // InvalidMomentException
+        // ----------------------------------------------------------------------
+        public InvalidMomentException (DateTime moment, string message, Exception cause):
+            base (message, cause) {
+                this.moment = moment;
+            } // InvalidMomentException
 
         // ----------------------------------------------------------------------
 #if (NET35 || NET40 || NET45 || NET46)
-		private InvalidMomentException( SerializationInfo info, StreamingContext context ) :
-			base( info, context )
-		{
-			moment = (DateTime)info.GetValue( "moment", typeof( DateTime ) );
-		} // InvalidMomentException
+        private InvalidMomentException (SerializationInfo info, StreamingContext context):
+            base (info, context) {
+                moment = (DateTime) info.GetValue ("moment", typeof (DateTime));
+            } // InvalidMomentException
 
-		// ----------------------------------------------------------------------
-		public override void GetObjectData( SerializationInfo info, StreamingContext context )
-		{
-			info.AddValue( "faultInfo", moment );
-			base.GetObjectData( info, context );
-		} // GetObjectData
+        // ----------------------------------------------------------------------
+        public override void GetObjectData (SerializationInfo info, StreamingContext context) {
+            info.AddValue ("faultInfo", moment);
+            base.GetObjectData (info, context);
+        } // GetObjectData
 #endif
 
         // ----------------------------------------------------------------------
-        public DateTime Moment
-		{
-			get { return moment; }
-		} // Moment
+        public DateTime Moment {
+            get { return moment; }
+        } // Moment
 
-		// ----------------------------------------------------------------------
-		// members
-		private readonly DateTime moment;
+        // ----------------------------------------------------------------------
+        // members
+        private readonly DateTime moment;
 
-	} // class InvalidMomentException
+    } // class InvalidMomentException
 
 } // namespace Itenso.TimePeriod
 // -- EOF -------------------------------------------------------------------

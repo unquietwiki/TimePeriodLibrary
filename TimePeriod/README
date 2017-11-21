@@ -1,0 +1,14 @@
+Original Project: https://www.codeproject.com/Articles/168662/Time-Period-Library-for-NET
+Original Github: https://github.com/Giannoudis/TimePeriodLibrary
+Original Author: Jani Giannoudis; Itenso GmbH, Switzerland; 2011-2017
+
+Working fork: https://github.com/unquietwiki/TimePeriodLibrary
+Fork maintainer: Michael Adams; unquietwiki@gmail.com; November 2017
+
+Changes in this fork...
+
+* Conversion to use .NET Core & Runtime 2.0
+* Consolidation of separate enum files into "PublicEnums.cs"
+* Consolidation of separate interface files into "PublicInterfaces.cs"
+* Reformatting of C# files via "C# FixFormat" and "Format All Files" VS Code extensions.
+* Attempt to repair https://github.com/Giannoudis/TimePeriodLibrary/issues/17

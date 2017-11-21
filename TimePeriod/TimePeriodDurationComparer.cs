@@ -7,24 +7,21 @@
 // copyright  : (c) 2011-2013 by Itenso GmbH, Switzerland
 // --------------------------------------------------------------------------
 
-namespace Itenso.TimePeriod
-{
+namespace Itenso.TimePeriod {
 
-	// ------------------------------------------------------------------------
-	public sealed class TimePeriodDurationComparer : ITimePeriodComparer
-	{
+    // ------------------------------------------------------------------------
+    public sealed class TimePeriodDurationComparer : ITimePeriodComparer {
 
-		// ----------------------------------------------------------------------
-		public static ITimePeriodComparer Comparer = new TimePeriodDurationComparer();
-		public static ITimePeriodComparer ReverseComparer = new TimePeriodReversComparer( new TimePeriodDurationComparer() );
+        // ----------------------------------------------------------------------
+        public static ITimePeriodComparer Comparer = new TimePeriodDurationComparer ();
+        public static ITimePeriodComparer ReverseComparer = new TimePeriodReversComparer (new TimePeriodDurationComparer ());
 
-		// ----------------------------------------------------------------------
-		public int Compare( ITimePeriod left, ITimePeriod right )
-		{
-			return left.Duration.CompareTo( right.Duration );
-		} // Compare
+        // ----------------------------------------------------------------------
+        public int Compare (ITimePeriod left, ITimePeriod right) {
+            return left.Duration.CompareTo (right.Duration);
+        } // Compare
 
-	} // class TimePeriodDurationComparer
+    } // class TimePeriodDurationComparer
 
 } // namespace Itenso.TimePeriod
 // -- EOF -------------------------------------------------------------------
