@@ -47,7 +47,6 @@ Temporary Items
 .apdisk
 *.suo
 *.user
-*.bat
 Pub
 obj/
 bin/
