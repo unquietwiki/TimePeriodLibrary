@@ -7,6 +7,9 @@
 // copyright  : (c) 2011-2012 by Itenso GmbH, Switzerland
 // --------------------------------------------------------------------------
 using System;
+using System.Linq;
+
+// Modified to replace for-loops, with Enumerable-foreach loops; part of issue #17 debugging.
 
 namespace Itenso.TimePeriod {
 
@@ -54,8 +57,8 @@ namespace Itenso.TimePeriod {
         // ----------------------------------------------------------------------
         public ITimePeriodCollection GetHalfyears () {
             TimePeriodCollection halfyears = new TimePeriodCollection ();
-            for (int i = 0; i < yearCount; i++) {
-                for (int halfyear = 0; halfyear < TimeSpec.HalfyearsPerYear; halfyear++) {
+            foreach (var i in Enumerable.Range (0, yearCount)) {
+                foreach (var halfyear in Enumerable.Range (0, TimeSpec.HalfyearsPerYear)) {
                     int year;
                     YearHalfyear yearHalfyear;
                     TimeTool.AddHalfyear (startYear, YearHalfyear.First, (i * TimeSpec.HalfyearsPerYear) + halfyear, out year, out yearHalfyear);
@@ -68,8 +71,8 @@ namespace Itenso.TimePeriod {
         // ----------------------------------------------------------------------
         public ITimePeriodCollection GetQuarters () {
             TimePeriodCollection quarters = new TimePeriodCollection ();
-            for (int i = 0; i < yearCount; i++) {
-                for (int quarter = 0; quarter < TimeSpec.QuartersPerYear; quarter++) {
+            foreach (var i in Enumerable.Range (0, yearCount)) {
+                foreach (var quarter in Enumerable.Range (0, TimeSpec.QuartersPerYear)) {
                     int year;
                     YearQuarter yearQuarter;
                     TimeTool.AddQuarter (startYear, YearQuarter.First, (i * TimeSpec.QuartersPerYear) + quarter, out year, out yearQuarter);
@@ -82,8 +85,8 @@ namespace Itenso.TimePeriod {
         // ----------------------------------------------------------------------
         public ITimePeriodCollection GetMonths () {
             TimePeriodCollection months = new TimePeriodCollection ();
-            for (int i = 0; i < yearCount; i++) {
-                for (int month = 0; month < TimeSpec.MonthsPerYear; month++) {
+            foreach (var i in Enumerable.Range (0, yearCount)) {
+                foreach (var month in Enumerable.Range (0, TimeSpec.MonthsPerYear)) {
                     int year;
                     YearMonth yearMonth;
                     TimeTool.AddMonth (startYear, YearBaseMonth, (i * TimeSpec.MonthsPerYear) + month, out year, out yearMonth);

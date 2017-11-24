@@ -8,6 +8,9 @@
 // --------------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
+using System.Linq;
+
+// Modified to replace for-loops, with Enumerable-foreach loops; part of issue #17 debugging.
 
 namespace Itenso.TimePeriod {
 
@@ -124,7 +127,7 @@ namespace Itenso.TimePeriod {
             // setup destination search
             switch (seekDirection) {
                 case SeekDirection.Forward:
-                    for (int i = availablePeriods.IndexOf (startPeriod); i < availablePeriods.Count; i++) {
+                    foreach(var i in Enumerable.Range(availablePeriods.IndexOf(startPeriod),availablePeriods.Count)){
                         ITimePeriod gap = availablePeriods[i];
                         TimeSpan gapRemining = gap.End - seekMoment;
 
@@ -152,7 +155,7 @@ namespace Itenso.TimePeriod {
                     }
                     break;
                 case SeekDirection.Backward:
-                    for (int i = availablePeriods.IndexOf (startPeriod); i >= 0; i--) {
+                    foreach(var i in Enumerable.Range(availablePeriods.IndexOf(startPeriod),0-availablePeriods.Count)){
                         ITimePeriod gap = availablePeriods[i];
                         TimeSpan gapRemining = seekMoment - gap.Start;
 

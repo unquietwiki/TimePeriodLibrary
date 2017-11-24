@@ -7,6 +7,9 @@
 // copyright  : (c) 2011-2012 by Itenso GmbH, Switzerland
 // --------------------------------------------------------------------------
 using System;
+using System.Linq;
+
+// Modified to replace for-loops, with Enumerable-foreach loops; part of issue #17 debugging.
 
 namespace Itenso.TimePeriod {
 
@@ -79,8 +82,8 @@ namespace Itenso.TimePeriod {
         // ----------------------------------------------------------------------
         public ITimePeriodCollection GetMonths () {
             TimePeriodCollection months = new TimePeriodCollection ();
-            for (int i = 0; i < quarterCount; i++) {
-                for (int month = 0; month < TimeSpec.MonthsPerQuarter; month++) {
+            foreach (var i in Enumerable.Range (0, QuarterCount)) {
+                foreach (var month in Enumerable.Range (0, TimeSpec.MonthsPerQuarter)) {
                     int year;
                     YearMonth yearMonth;
                     TimeTool.AddMonth (startYear, YearBaseMonth, (i * TimeSpec.MonthsPerQuarter) + month, out year, out yearMonth);

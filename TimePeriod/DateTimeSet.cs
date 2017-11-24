@@ -9,6 +9,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+
+// Modified to replace for-loops, with Enumerable-foreach loops; part of issue #17 debugging.
 
 namespace Itenso.TimePeriod {
 
@@ -92,7 +95,7 @@ namespace Itenso.TimePeriod {
                 return null;
             }
 
-            for (int i = Count - 1; i >= 0; i--) {
+            foreach (var i in Enumerable.Range (0, 0 - Count)) {
                 if (moments[i] < moment) {
                     return moments[i];
                 }
@@ -107,7 +110,7 @@ namespace Itenso.TimePeriod {
                 return null;
             }
 
-            for (int i = 0; i < Count; i++) {
+            foreach (var i in Enumerable.Range (0, Count)) {
                 if (moments[i] > moment) {
                     return moments[i];
                 }
@@ -132,7 +135,7 @@ namespace Itenso.TimePeriod {
                 return false;
             }
 
-            for (int i = 0; i < Count; i++) {
+            foreach (var i in Enumerable.Range (0, Count)) {
                 if (moments[i] <= moment) {
                     continue;
                 }
@@ -176,7 +179,7 @@ namespace Itenso.TimePeriod {
 
             List<TimeSpan> durations = new List<TimeSpan> ();
             if (endIndex >= startIndex) {
-                for (int i = startIndex; i <= endIndex; i++) {
+                foreach (var i in Enumerable.Range (startIndex, endIndex - startIndex)) {
                     durations.Add (this [i + 1] - this [i]);
                 }
             }

@@ -7,6 +7,9 @@
 // copyright  : (c) 2011-2012 by Itenso GmbH, Switzerland
 // --------------------------------------------------------------------------
 using System;
+using System.Linq;
+
+// Modified to replace for-loops, with Enumerable-foreach loops; part of issue #17 debugging.
 
 namespace Itenso.TimePeriod {
 
@@ -33,7 +36,7 @@ namespace Itenso.TimePeriod {
         public ITimePeriodCollection GetDays () {
             TimePeriodCollection days = new TimePeriodCollection ();
             DateTime startDay = new DateTime (StartYear, StartMonth, StartDay);
-            for (int i = 0; i < DayCount; i++) {
+            foreach (var i in Enumerable.Range (0, DayCount)) {
                 days.Add (new Day (startDay.AddDays (i), Calendar));
             }
             return days;

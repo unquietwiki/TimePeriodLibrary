@@ -8,6 +8,9 @@
 // --------------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
+using System.Linq;
+
+// Modified to replace for-loops, with Enumerable-foreach loops; part of issue #17 debugging.
 
 namespace Itenso.TimePeriod {
 
@@ -206,7 +209,7 @@ namespace Itenso.TimePeriod {
             // search for periods
             int intersectionStart = -1;
             int balance = 0;
-            for (int i = 0; i < timeLineMoments.Count; i++) {
+            foreach (var i in Enumerable.Range (0, timeLineMoments.Count)) {
                 ITimeLineMoment moment = timeLineMoments[i];
 
                 int startCount = moment.StartCount;
@@ -244,7 +247,7 @@ namespace Itenso.TimePeriod {
             // search for periods
             int intersectionStart = -1;
             int balance = 0;
-            for (int i = 0; i < timeLineMoments.Count; i++) {
+            foreach (var i in Enumerable.Range (0, timeLineMoments.Count)) {
                 ITimeLineMoment moment = timeLineMoments[i];
 
                 balance += moment.BalanceCount;

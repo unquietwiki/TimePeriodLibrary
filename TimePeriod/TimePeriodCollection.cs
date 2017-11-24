@@ -12,6 +12,9 @@ using System.Collections.Generic;
 #if (!PCL)
 using System.ComponentModel;
 #endif
+using System.Linq;
+
+// Modified to replace for-loops, with Enumerable-foreach loops; part of issue #17 debugging.
 
 namespace Itenso.TimePeriod {
 
@@ -562,7 +565,7 @@ namespace Itenso.TimePeriod {
                 return false;
             }
 
-            for (int i = 0; i < Count; i++) {
+            foreach (var i in Enumerable.Range (0, Count)) {
                 if (!this [i].Equals (comp[i])) {
                     return false;
                 }

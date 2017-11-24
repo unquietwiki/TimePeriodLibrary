@@ -8,6 +8,9 @@
 // --------------------------------------------------------------------------
 using System;
 using System.Globalization;
+using System.Linq;
+
+// Modified to replace for-loops, with Enumerable-foreach loops; part of issue #17 debugging.
 
 namespace Itenso.TimePeriod {
 
@@ -279,7 +282,7 @@ namespace Itenso.TimePeriod {
             elapsedItems[5] = ElapsedSeconds;
 
             if (precision <= elapsedItems.Length - 1) {
-                for (int i = precision; i < elapsedItems.Length; i++) {
+                foreach(var i in Enumerable.Range(precision,elapsedItems.Length)){
                     elapsedItems[i] = 0;
                 }
             }

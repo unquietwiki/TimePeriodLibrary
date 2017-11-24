@@ -9,6 +9,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+
+// Modified to replace for-loops, with Enumerable-foreach loops; part of issue #17 debugging.
 
 namespace Itenso.TimePeriod {
 
@@ -136,7 +139,7 @@ namespace Itenso.TimePeriod {
             bool hasGaps = false;
             if (Count > 1) {
                 int momentCount = 0;
-                for (int index = 0; index < timeLineMoments.Count; index++) {
+                foreach(var index in Enumerable.Range(0,timeLineMoments.Count)){
                     ITimeLineMoment timeLineMoment = this [index];
                     momentCount += timeLineMoment.StartCount;
                     momentCount -= timeLineMoment.EndCount;

@@ -8,6 +8,9 @@
 // --------------------------------------------------------------------------
 using System;
 using System.Globalization;
+using System.Linq;
+
+// Modified to replace for-loops, with Enumerable-foreach loops; part of issue #17 debugging.
 
 namespace Itenso.TimePeriod {
 
@@ -48,8 +51,7 @@ namespace Itenso.TimePeriod {
         // ----------------------------------------------------------------------
         public ITimePeriodCollection GetWeeks () {
             TimePeriodCollection weeks = new TimePeriodCollection ();
-            int weekCount = BroadcastCalendarTool.GetWeeksOfYear (year);
-            for (int week = 1; week <= weekCount; week++) {
+            foreach(var week in Enumerable.Range(1,BroadcastCalendarTool.GetWeeksOfYear(year))){
                 weeks.Add (new BroadcastWeek (year, week));
             }
             return weeks;
@@ -58,7 +60,7 @@ namespace Itenso.TimePeriod {
         // ----------------------------------------------------------------------
         public ITimePeriodCollection GetMonths () {
             TimePeriodCollection months = new TimePeriodCollection ();
-            for (int month = 1; month <= TimeSpec.MonthsPerYear; month++) {
+            foreach (var month in Enumerable.Range(1,TimeSpec.MonthsPerYear)) {
                 months.Add (new BroadcastMonth (year, (YearMonth) month));
             }
             return months;

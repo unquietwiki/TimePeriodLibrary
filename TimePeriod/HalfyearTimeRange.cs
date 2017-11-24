@@ -7,6 +7,9 @@
 // copyright  : (c) 2011-2012 by Itenso GmbH, Switzerland
 // --------------------------------------------------------------------------
 using System;
+using System.Linq;
+
+// Modified to replace for-loops, with Enumerable-foreach loops; part of issue #17 debugging.
 
 namespace Itenso.TimePeriod {
 
@@ -76,8 +79,8 @@ namespace Itenso.TimePeriod {
         public ITimePeriodCollection GetQuarters () {
             TimePeriodCollection quarters = new TimePeriodCollection ();
             YearQuarter startQuarter = StartHalfyear == YearHalfyear.First ? YearQuarter.First : YearQuarter.Third;
-            for (int i = 0; i < halfyearCount; i++) {
-                for (int quarter = 0; quarter < TimeSpec.QuartersPerHalfyear; quarter++) {
+            foreach (var i in Enumerable.Range (0, halfyearCount)) {
+                foreach (var quarter in Enumerable.Range (0, TimeSpec.QuartersPerHalfyear)) {
                     int year;
                     YearQuarter yearQuarter;
                     TimeTool.AddQuarter (startYear, startQuarter, (i * TimeSpec.QuartersPerHalfyear) + quarter, out year, out yearQuarter);
@@ -95,8 +98,8 @@ namespace Itenso.TimePeriod {
                 int year;
                 TimeTool.AddMonth (startYear, startMonth, TimeSpec.MonthsPerHalfyear, out year, out startMonth);
             }
-            for (int i = 0; i < halfyearCount; i++) {
-                for (int month = 0; month < TimeSpec.MonthsPerHalfyear; month++) {
+            foreach (var i in Enumerable.Range (0, halfyearCount)) {
+                foreach (var month in Enumerable.Range (0, TimeSpec.MonthsPerHalfyear)) {
                     int year;
                     YearMonth yearMonth;
                     TimeTool.AddMonth (startYear, startMonth, (i * TimeSpec.MonthsPerHalfyear) + month, out year, out yearMonth);

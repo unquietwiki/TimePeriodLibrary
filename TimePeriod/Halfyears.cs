@@ -7,6 +7,9 @@
 // copyright  : (c) 2011-2012 by Itenso GmbH, Switzerland
 // --------------------------------------------------------------------------
 using System;
+using System.Linq;
+
+// Modified to replace for-loops, with Enumerable-foreach loops; part of issue #17 debugging.
 
 namespace Itenso.TimePeriod {
 
@@ -33,7 +36,7 @@ namespace Itenso.TimePeriod {
         // ----------------------------------------------------------------------
         public ITimePeriodCollection GetHalfyears () {
             TimePeriodCollection halfyears = new TimePeriodCollection ();
-            for (int i = 0; i < HalfyearCount; i++) {
+            foreach (var i in Enumerable.Range (0, HalfyearCount)) {
                 int year;
                 YearHalfyear halfyear;
                 TimeTool.AddHalfyear (BaseYear, StartHalfyear, i, out year, out halfyear);

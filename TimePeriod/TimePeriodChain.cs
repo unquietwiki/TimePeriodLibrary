@@ -9,6 +9,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+
+// Modified to replace for-loops, with Enumerable-foreach loops; part of issue #17 debugging.
 
 namespace Itenso.TimePeriod {
 
@@ -213,7 +216,7 @@ namespace Itenso.TimePeriod {
             // adjust time periods after the inserted item
             if (previous != null) {
                 period.Setup (previous.End, previous.End + period.Duration);
-                for (int i = index + 1; i < Count; i++) {
+                foreach (var i in Enumerable.Range (index, Count)) {
                     DateTime previousStart = this [i].Start.Add (itemDuration);
                     this [i].Setup (previousStart, previousStart.Add (this [i].Duration));
                 }
@@ -225,7 +228,7 @@ namespace Itenso.TimePeriod {
             }
             DateTime nextStart = next.Start.Subtract (itemDuration);
             period.Setup (nextStart, nextStart.Add (period.Duration));
-            for (int i = 0; i < index - 1; i++) {
+            foreach (var i in Enumerable.Range (index, 0 - index)) {
                 nextStart = this [i].Start.Subtract (itemDuration);
                 this [i].Setup (nextStart, nextStart.Add (this [i].Duration));
             }
@@ -278,7 +281,7 @@ namespace Itenso.TimePeriod {
             bool removed = periods.Remove (period);
             if (removed && next != null) // fill the gap
             {
-                for (int i = index; i < Count; i++) {
+                foreach (var i in Enumerable.Range (index, Count)) {
                     DateTime start = this [i].Start.Subtract (itemDuration);
                     this [i].Setup (start, start.Add (this [i].Duration));
                 }
@@ -385,7 +388,7 @@ namespace Itenso.TimePeriod {
                 return false;
             }
 
-            for (int i = 0; i < Count; i++) {
+            foreach (var i in Enumerable.Range (0, Count)) {
                 if (!this [i].Equals (comp[i])) {
                     return false;
                 }
