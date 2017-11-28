@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 // Modified to replace for-loops, with Enumerable-foreach loops; part of issue #17 debugging.
+// Also converted PeriodRelation method to List.
 
 namespace Itenso.TimePeriod {
 
@@ -333,7 +334,7 @@ namespace Itenso.TimePeriod {
         } // OverlapsWith
 
         // ----------------------------------------------------------------------
-        public virtual PeriodRelation GetRelation (ITimePeriod test) {
+        public virtual List<PeriodRelation> GetRelation (ITimePeriod test) {
             if (test == null) {
                 throw new ArgumentNullException ("test");
             }

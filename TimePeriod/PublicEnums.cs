@@ -1,5 +1,5 @@
 // -- FILE ------------------------------------------------------------------
-// name       : PublicEnumscs
+// name       : PublicEnums.cs
 // project    : Itenso Time Period
 // original   : Jani Giannoudis - 2011-2013
 // refactor   : Michael Adams - 2017.11.20

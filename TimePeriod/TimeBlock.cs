@@ -7,6 +7,10 @@
 // copyright  : (c) 2011-2012 by Itenso GmbH, Switzerland
 // --------------------------------------------------------------------------
 using System;
+using System.Collections.Generic;
+
+// Attempt to resolve issue #17
+// Converted PeriodRelation method to List
 
 namespace Itenso.TimePeriod {
 
@@ -30,7 +34,7 @@ namespace Itenso.TimePeriod {
 
         // ----------------------------------------------------------------------
         public TimeBlock (DateTime start, DateTime end, bool isReadOnly = false) {
-            if (start <= end) {
+            if (start.CompareTo (end) < 1) {
                 this.start = start;
                 this.end = end;
             } else {
@@ -43,9 +47,7 @@ namespace Itenso.TimePeriod {
 
         // ----------------------------------------------------------------------
         public TimeBlock (DateTime start, TimeSpan duration, bool isReadOnly = false) {
-            if (duration < TimeSpec.MinPeriodDuration) {
-                throw new ArgumentOutOfRangeException ("duration");
-            }
+            if (duration < TimeSpec.MinPeriodDuration) throw new ArgumentOutOfRangeException ("duration");
             this.start = start;
             this.duration = duration;
             end = start.Add (duration);
@@ -54,9 +56,7 @@ namespace Itenso.TimePeriod {
 
         // ----------------------------------------------------------------------
         public TimeBlock (TimeSpan duration, DateTime end, bool isReadOnly = false) {
-            if (duration < TimeSpec.MinPeriodDuration) {
-                throw new ArgumentOutOfRangeException ("duration");
-            }
+            if (duration < TimeSpec.MinPeriodDuration) throw new ArgumentOutOfRangeException ("duration");
             this.end = end;
             this.duration = duration;
             start = end.Subtract (duration);
@@ -65,9 +65,7 @@ namespace Itenso.TimePeriod {
 
         // ----------------------------------------------------------------------
         public TimeBlock (ITimePeriod copy) {
-            if (copy == null) {
-                throw new ArgumentNullException ("copy");
-            }
+            CommonMethods.checkNull (copy, "copy @ TimeBlock");
             start = copy.Start;
             end = copy.End;
             duration = copy.Duration;
@@ -76,9 +74,7 @@ namespace Itenso.TimePeriod {
 
         // ----------------------------------------------------------------------
         protected TimeBlock (ITimePeriod copy, bool isReadOnly) {
-            if (copy == null) {
-                throw new ArgumentNullException ("copy");
-            }
+            CommonMethods.checkNull (copy, "copy @ TimeBlock w/bool");
             start = copy.Start;
             end = copy.End;
             duration = copy.Duration;
@@ -143,9 +139,7 @@ namespace Itenso.TimePeriod {
 
         // ----------------------------------------------------------------------
         public virtual TimeSpan GetDuration (IDurationProvider provider) {
-            if (provider == null) {
-                throw new ArgumentNullException ("provider");
-            }
+            CommonMethods.checkNull (provider, "provider @ GetDuration");
             return provider.GetDuration (Start, End);
         } // GetDuration
 
@@ -165,9 +159,7 @@ namespace Itenso.TimePeriod {
         // ----------------------------------------------------------------------
         public virtual void Setup (DateTime newStart, TimeSpan newDuration) {
             CheckModification ();
-            if (newDuration < TimeSpec.MinPeriodDuration) {
-                throw new ArgumentOutOfRangeException ("newDuration");
-            }
+            if (newDuration < TimeSpec.MinPeriodDuration) throw new ArgumentOutOfRangeException ("newDuration");
             start = newStart;
             duration = newDuration;
             end = start.Add (duration);
@@ -186,9 +178,7 @@ namespace Itenso.TimePeriod {
         // ----------------------------------------------------------------------
         public virtual void Move (TimeSpan offset) {
             CheckModification ();
-            if (offset == TimeSpan.Zero) {
-                return;
-            }
+            if (offset == TimeSpan.Zero) return;
             start = start.Add (offset);
             end = end.Add (offset);
         } // Move
@@ -215,31 +205,23 @@ namespace Itenso.TimePeriod {
 
         // ----------------------------------------------------------------------
         public virtual void DurationFromStart (TimeSpan newDuration) {
-            if (newDuration < TimeSpec.MinPeriodDuration) {
-                throw new ArgumentOutOfRangeException ("newDuration");
-            }
+            if (newDuration < TimeSpec.MinPeriodDuration) throw new ArgumentOutOfRangeException ("newDuration");
             CheckModification ();
-
             duration = newDuration;
             end = start.Add (newDuration);
         } // DurationFromStart
 
         // ----------------------------------------------------------------------
         public virtual void DurationFromEnd (TimeSpan newDuration) {
-            if (newDuration < TimeSpec.MinPeriodDuration) {
-                throw new ArgumentOutOfRangeException ("newDuration");
-            }
+            if (newDuration < TimeSpec.MinPeriodDuration) throw new ArgumentOutOfRangeException ("newDuration");
             CheckModification ();
-
             duration = newDuration;
             start = end.Subtract (newDuration);
         } // DurationFromEnd
 
         // ----------------------------------------------------------------------
         public virtual bool IsSamePeriod (ITimePeriod test) {
-            if (test == null) {
-                throw new ArgumentNullException ("test");
-            }
+            CommonMethods.checkNull (test, "test @ IsSamePeriod");
             return start == test.Start && end == test.End;
         } // IsSamePeriod
 
@@ -250,60 +232,44 @@ namespace Itenso.TimePeriod {
 
         // ----------------------------------------------------------------------
         public virtual bool HasInside (ITimePeriod test) {
-            if (test == null) {
-                throw new ArgumentNullException ("test");
-            }
+            CommonMethods.checkNull (test, "test @ HasInside");
             return TimePeriodCalc.HasInside (this, test);
         } // HasInside
 
         // ----------------------------------------------------------------------
         public virtual bool IntersectsWith (ITimePeriod test) {
-            if (test == null) {
-                throw new ArgumentNullException ("test");
-            }
+            CommonMethods.checkNull (test, "test @ IntersectsWith");
             return TimePeriodCalc.IntersectsWith (this, test);
         } // IntersectsWith
 
         // ----------------------------------------------------------------------
         public virtual ITimeBlock GetIntersection (ITimePeriod period) {
-            if (period == null) {
-                throw new ArgumentNullException ("period");
-            }
-            if (!IntersectsWith (period)) {
-                return null;
-            }
+            CommonMethods.checkNull (period, "period @ GetIntersection");
+            if (!IntersectsWith (period)) return null;            
             DateTime periodStart = period.Start;
             DateTime periodEnd = period.End;
             return new TimeBlock (
-                periodStart > start ? periodStart : start,
-                periodEnd < end ? periodEnd : end,
+                periodStart.Ticks > start.Ticks ? periodStart : start,
+                periodEnd.Ticks < end.Ticks ? periodEnd : end,
                 IsReadOnly);
         } // GetIntersection
 
         // ----------------------------------------------------------------------
         public virtual bool OverlapsWith (ITimePeriod test) {
-            if (test == null) {
-                throw new ArgumentNullException ("test");
-            }
+            CommonMethods.checkNull (test, "test @ OverlapsWith");
             return TimePeriodCalc.OverlapsWith (this, test);
         } // OverlapsWith
 
         // ----------------------------------------------------------------------
-        public virtual PeriodRelation GetRelation (ITimePeriod test) {
-            if (test == null) {
-                throw new ArgumentNullException ("test");
-            }
+        public virtual List<PeriodRelation> GetRelation (ITimePeriod test) {
+            CommonMethods.checkNull (test, "test @ GetRelation");
             return TimePeriodCalc.GetRelation (this, test);
         } // GetRelation
 
         // ----------------------------------------------------------------------
         public virtual int CompareTo (ITimePeriod other, ITimePeriodComparer comparer) {
-            if (other == null) {
-                throw new ArgumentNullException ("other");
-            }
-            if (comparer == null) {
-                throw new ArgumentNullException ("comparer");
-            }
+            CommonMethods.checkNull (other, "other @ CompareTo");
+            CommonMethods.checkNull (comparer, "comparer @ CompareTo");
             return comparer.Compare (this, other);
         } // CompareTo
 
@@ -332,12 +298,8 @@ namespace Itenso.TimePeriod {
 
         // ----------------------------------------------------------------------
         public sealed override bool Equals (object obj) {
-            if (obj == this) {
-                return true;
-            }
-            if (obj == null || GetType () != obj.GetType ()) {
-                return false;
-            }
+            if (obj == this) return true;
+            if (obj == null || GetType () != obj.GetType ()) return false;
             return IsEqual (obj);
         } // Equals
 

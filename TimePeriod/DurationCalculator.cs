@@ -8,6 +8,11 @@
 // --------------------------------------------------------------------------
 using System;
 
+// Attempt to fix Issue #17: use ticks, DateTime.CompareTo, etc.
+// https://stackoverflow.com/questions/5672862/check-if-datetime-instance-falls-in-between-other-two-datetime-objects
+// https://github.com/augustoclaro/datetimerange/blob/master/DateTimeRange/DateTimeRange.cs
+// https://docs.microsoft.com/en-us/dotnet/api/system.datetime.compareto?view=netcore-2.0#System_DateTime_CompareTo_System_DateTime_
+
 namespace Itenso.TimePeriod {
 
     // ------------------------------------------------------------------------
@@ -19,10 +24,7 @@ namespace Itenso.TimePeriod {
 
         // ----------------------------------------------------------------------
         public DurationCalculator (IDurationProvider durationProvider) {
-            if (durationProvider == null) {
-                throw new ArgumentNullException ("durationProvider");
-            }
-
+            CommonMethods.checkNull (durationProvider, "durationProvider");
             this.durationProvider = durationProvider;
         } // DurationCalculator
 
@@ -49,9 +51,7 @@ namespace Itenso.TimePeriod {
         // ----------------------------------------------------------------------
         public void Hours (params HourRange[] hours) {
             filter.CollectingHours.Clear ();
-            foreach (HourRange hour in hours) {
-                filter.CollectingHours.Add (hour);
-            }
+            foreach (HourRange hour in hours) filter.CollectingHours.Add (hour);
         } // Hours
 
         // ----------------------------------------------------------------------
@@ -62,17 +62,13 @@ namespace Itenso.TimePeriod {
         // ----------------------------------------------------------------------
         public void DayHours (params DayHourRange[] dayHours) {
             filter.CollectingDayHours.Clear ();
-            foreach (DayHourRange dayHour in dayHours) {
-                filter.CollectingDayHours.Add (dayHour);
-            }
+            foreach (DayHourRange dayHour in dayHours) filter.CollectingDayHours.Add (dayHour);
         } // DayHours
 
         // ----------------------------------------------------------------------
         public void WeekDays (params DayOfWeek[] weekDays) {
             filter.WeekDays.Clear ();
-            foreach (DayOfWeek weekDay in weekDays) {
-                filter.WeekDays.Add (weekDay);
-            }
+            foreach (DayOfWeek weekDay in weekDays) filter.WeekDays.Add (weekDay);
         } // WeekDays
 
         // ----------------------------------------------------------------------
@@ -89,9 +85,7 @@ namespace Itenso.TimePeriod {
 
         // ----------------------------------------------------------------------
         public TimeSpan CalcDuration (ITimeRange period) {
-            if (period == null) {
-                throw new ArgumentNullException ("period");
-            }
+            CommonMethods.checkNull (period, "period");
             return DoCalcDuration (period.Start, period.End);
         } // CalcDuration
 
@@ -102,36 +96,28 @@ namespace Itenso.TimePeriod {
 
         // ----------------------------------------------------------------------
         public TimeSpan CalcDayllightDuration (ITimeRange period, TimeZoneInfo timeZone) {
-            if (period == null) {
-                throw new ArgumentNullException ("period");
-            }
-            if (timeZone == null) {
-                timeZone = TimeZoneInfo.Local;
-            }
+            CommonMethods.checkNull (period, "period");
+            if (timeZone == null) timeZone = TimeZoneInfo.Local;
             return DoCalcDuration (period.Start, period.End, timeZone);
         } // CalcDayllightDuration
 
         // ----------------------------------------------------------------------
         public TimeSpan CalcDayllightDuration (DateTime start, DateTime end, TimeZoneInfo timeZone) {
-            if (timeZone == null) {
-                timeZone = TimeZoneInfo.Local;
-            }
+            if (timeZone == null) timeZone = TimeZoneInfo.Local;
             return DoCalcDuration (start, end, timeZone);
         } // CalcDayllightDuration
 
         // ----------------------------------------------------------------------
         protected virtual TimeSpan DoCalcDuration (DateTime start, DateTime end, TimeZoneInfo timeZone = null) {
-            if (start.Equals (end)) {
-                return TimeSpan.Zero;
-            }
+            if (start.CompareTo (end) == 0) return TimeSpan.Zero;
 
             // test range
             TimeRange testRange = new TimeRange (start, end);
 
             // search range
             DateTime searchStart = new Day (testRange.Start).Start;
-            DateTime serachEnd = new Day (testRange.End).GetNextDay ().Start;
-            TimeRange searchPeriod = new TimeRange (searchStart, serachEnd);
+            DateTime searchEnd = new Day (testRange.End).GetNextDay ().Start;
+            TimeRange searchPeriod = new TimeRange (searchStart, searchEnd);
 
             // exclude periods
             filter.ExcludePeriods.Clear ();
@@ -147,13 +133,11 @@ namespace Itenso.TimePeriod {
             foreach (ICalendarTimeRange period in collector.Periods) {
                 // get the intersection of the test-range and the day hours
                 ITimePeriod intersection = testRange.GetIntersection (period);
-                if (intersection == null) {
-                    continue;
-                }
+                if (intersection == null) continue;
                 duration = duration.Add (durationProvider.GetDuration (intersection.Start, intersection.End));
             }
-
-            return start < end ? duration : duration.Negate ();
+            
+            return start.Ticks < end.Ticks ? duration : duration.Negate ();
         } // DoCalcDuration
 
         // ----------------------------------------------------------------------

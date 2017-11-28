@@ -14,6 +14,9 @@ using System.Globalization;
 using System.ComponentModel;
 #endif
 
+// Attempt to resolve issue #17
+// Converted PeriodRelation method to List
+
 namespace Itenso.TimePeriod {
 
     // ------------------------------------------------------------------------
@@ -133,6 +136,16 @@ namespace Itenso.TimePeriod {
         TimeSpan GetDuration (DateTime start, DateTime end);
 
     } // interface IDurationProvider
+
+    // ------------------------------------------------------------------------
+    public class DurationProvider : IDurationProvider {
+
+        // ----------------------------------------------------------------------
+        public virtual TimeSpan GetDuration (DateTime start, DateTime end) {
+            return end.Subtract (start);
+        } // GetDuration
+
+    } // class DurationProvider
 
     // ------------------------------------------------------------------------
     public interface ITimeBlock : ITimePeriod {
@@ -605,7 +618,7 @@ namespace Itenso.TimePeriod {
         bool OverlapsWith (ITimePeriod test);
 
         // ----------------------------------------------------------------------
-        PeriodRelation GetRelation (ITimePeriod test);
+        List<PeriodRelation> GetRelation (ITimePeriod test);
 
         // ----------------------------------------------------------------------
         int CompareTo (ITimePeriod other, ITimePeriodComparer comparer);
@@ -693,7 +706,7 @@ namespace Itenso.TimePeriod {
         ITimePeriodCollection IntersectionPeriods (ITimePeriod test);
 
         // ----------------------------------------------------------------------
-        ITimePeriodCollection RelationPeriods (ITimePeriod test, PeriodRelation relation);
+        ITimePeriodCollection RelationPeriods (ITimePeriod test, List<PeriodRelation> relation);
 
     } // interface ITimePeriodCollection
 

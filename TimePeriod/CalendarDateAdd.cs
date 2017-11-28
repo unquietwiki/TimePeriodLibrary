@@ -20,15 +20,9 @@ namespace Itenso.TimePeriod {
 
         // ----------------------------------------------------------------------
         public CalendarDateAdd (ITimeCalendar calendar) {
-            if (calendar == null) {
-                throw new ArgumentNullException ("calendar");
-            }
-            if (calendar.StartOffset != TimeSpan.Zero) {
-                throw new ArgumentOutOfRangeException ("calendar", "start offset");
-            }
-            if (calendar.EndOffset != TimeSpan.Zero) {
-                throw new ArgumentOutOfRangeException ("calendar", "end offset");
-            }
+            CommonMethods.checkNull (calendar, "calendar");
+            if (calendar.StartOffset != TimeSpan.Zero) throw new ArgumentOutOfRangeException ("calendar", "start offset");
+            if (calendar.EndOffset != TimeSpan.Zero) throw new ArgumentOutOfRangeException ("calendar", "end offset");
             this.calendar = calendar;
         } // CalendarDateAdd
 
@@ -97,10 +91,8 @@ namespace Itenso.TimePeriod {
         // ----------------------------------------------------------------------
         protected DateTime? CalculateEnd (DateTime start, TimeSpan offset,
             SeekDirection seekDirection, SeekBoundaryMode seekBoundaryMode) {
-            if (offset < TimeSpan.Zero) {
-                throw new InvalidOperationException ("time span must be positive");
-            }
 
+            if (offset < TimeSpan.Zero) throw new InvalidOperationException ("time span must be positive");
             DateTime? endDate = null;
             DateTime moment = start;
             TimeSpan? remaining = offset;

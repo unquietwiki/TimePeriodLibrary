@@ -20,9 +20,7 @@ namespace Itenso.TimePeriod {
 
         // ----------------------------------------------------------------------
         public CalendarDateDiff (ITimeCalendar calendar, IDurationProvider durationProvider) {
-            if (calendar == null) {
-                throw new ArgumentNullException ("calendar");
-            }
+            CommonMethods.checkNull (calendar, "calendar");
             if (durationProvider == null) {
                 throw new ArgumentNullException ("durationProvider");
             }

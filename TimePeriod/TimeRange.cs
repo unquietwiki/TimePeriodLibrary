@@ -7,6 +7,10 @@
 // copyright  : (c) 2011-2012 by Itenso GmbH, Switzerland
 // --------------------------------------------------------------------------
 using System;
+using System.Collections.Generic;
+
+// Attempt to resolve issue #17
+// Converted PeriodRelation method to List
 
 namespace Itenso.TimePeriod {
 
@@ -285,7 +289,7 @@ namespace Itenso.TimePeriod {
         } // OverlapsWith
 
         // ----------------------------------------------------------------------
-        public virtual PeriodRelation GetRelation (ITimePeriod test) {
+        public virtual List<PeriodRelation> GetRelation (ITimePeriod test) {
             if (test == null) {
                 throw new ArgumentNullException ("test");
             }

@@ -15,6 +15,8 @@ using System.ComponentModel;
 using System.Linq;
 
 // Modified to replace for-loops, with Enumerable-foreach loops; part of issue #17 debugging.
+// Also converted PeriodRelation method to List.
+// https://stackoverflow.com/questions/3669970/compare-two-listt-objects-for-equality-ignoring-order for HashSet test idea.
 
 namespace Itenso.TimePeriod {
 
@@ -370,7 +372,7 @@ namespace Itenso.TimePeriod {
         } // IntersectionPeriods
 
         // ----------------------------------------------------------------------
-        public virtual ITimePeriodCollection RelationPeriods (ITimePeriod test, PeriodRelation relation) {
+        public virtual ITimePeriodCollection RelationPeriods (ITimePeriod test, List<PeriodRelation> relation) {
             if (test == null) {
                 throw new ArgumentNullException ("test");
             }
@@ -378,7 +380,9 @@ namespace Itenso.TimePeriod {
             TimePeriodCollection relationPeriods = new TimePeriodCollection ();
 
             foreach (ITimePeriod period in periods) {
-                if (test.GetRelation (period) == relation) {
+                var set1 = new HashSet<PeriodRelation> (test.GetRelation (period));
+                var set2 = new HashSet<PeriodRelation> (relation);
+                if (set1.Equals (set2)) {
                     relationPeriods.Add (period);
                 }
             }
@@ -510,7 +514,7 @@ namespace Itenso.TimePeriod {
         } // OverlapsWith
 
         // ----------------------------------------------------------------------
-        public virtual PeriodRelation GetRelation (ITimePeriod test) {
+        public virtual List<PeriodRelation> GetRelation (ITimePeriod test) {
             if (test == null) {
                 throw new ArgumentNullException ("test");
             }

@@ -2,17 +2,22 @@
 // name       : TimePeriodCalc.cs
 // project    : Itenso Time Period
 // created    : Jani Giannoudis - 2011.02.18
+// rewritten  : Michael Adams - 2017.11.27
 // language   : C# 4.0
 // environment: .NET 2.0
 // copyright  : (c) 2011-2012 by Itenso GmbH, Switzerland
 // --------------------------------------------------------------------------
 
-// Attempt to fix Issue #17: use ticks, and change the comparison. Ended up using DateTime.Compare to resolve this.
+// Modified heavily to try to fix issue #17
+// GetPeriodRelation could in theory return multiple values, so used the diagram from CodeProject to help figure out the difference
+// between testing a DateTime in a TimePeriod, and testing a TimePeriod in a TimePeriod.
+//
 // https://stackoverflow.com/questions/5672862/check-if-datetime-instance-falls-in-between-other-two-datetime-objects
 // https://github.com/augustoclaro/datetimerange/blob/master/DateTimeRange/DateTimeRange.cs
-// https://docs.microsoft.com/en-us/dotnet/api/system.datetime.compare?view=netcore-2.0#System_DateTime_Compare_System_DateTime_System_DateTime_
+// https://www.codeproject.com/Articles/168662/Time-Period-Library-for-NET
 
 using System;
+using System.Collections.Generic;
 
 namespace Itenso.TimePeriod {
 
@@ -21,18 +26,22 @@ namespace Itenso.TimePeriod {
 
         // ----------------------------------------------------------------------      
         public static bool HasInside (ITimePeriod period, DateTime test) {
-            var testStart = DateTime.Compare(test,period.Start);
-            var testEnd = DateTime.Compare(test,period.End);
-            if(testStart >= -1 && testEnd <= 1) return true;
+            if((test.Ticks >= period.Start.Ticks) && (test.Ticks <= period.End.Ticks)) return true;
             return false;
         } // HasInside
 
         // ----------------------------------------------------------------------
         public static bool HasInside (ITimePeriod period, ITimePeriod test) {
-            var testStart = DateTime.Compare(test.Start,period.Start);
-            var testEnd = DateTime.Compare(test.End,period.End);
-            if(testStart >= -1 && testEnd <= 1) return true;
-            return false;            
+            var relations = GetRelation (period, test);
+            var unwanted = new List<PeriodRelation> () {
+                PeriodRelation.Before,
+                PeriodRelation.After,
+                PeriodRelation.EndTouching,
+                PeriodRelation.StartTouching
+            };
+            foreach (var r in relations)
+                if (unwanted.Contains (r)) return false;;
+            return true;
         } // HasInside
 
         // ----------------------------------------------------------------------
@@ -42,35 +51,38 @@ namespace Itenso.TimePeriod {
 
         // ----------------------------------------------------------------------
         public static bool OverlapsWith (ITimePeriod period, ITimePeriod test) {
-            PeriodRelation relation = GetRelation (period, test);
-            return
-            relation != PeriodRelation.After &&
-                relation != PeriodRelation.StartTouching &&
-                relation != PeriodRelation.EndTouching &&
-                relation != PeriodRelation.Before;
+            var relations = GetRelation (period, test);
+            var unwanted = new List<PeriodRelation> () { PeriodRelation.Before, PeriodRelation.StartTouching, PeriodRelation.EndTouching, PeriodRelation.After };
+            foreach (var r in relations)
+                if (unwanted.Contains (r)) return false;;
+            return true;
         } // OverlapsWith
-
-        // ----------------------------------------------------------------------
-        public static PeriodRelation GetRelation (ITimePeriod period, ITimePeriod test) {           
-            if (test.End.Ticks < period.Start.Ticks) return PeriodRelation.After;
-            if (test.Start.Ticks > period.End.Ticks) return PeriodRelation.Before;
-            if (test.Start.Ticks == period.Start.Ticks && test.End.Ticks == period.End.Ticks) return PeriodRelation.ExactMatch;
-            if (test.End.Ticks == period.Start.Ticks) return PeriodRelation.StartTouching;
-            if (test.Start.Ticks == period.End.Ticks) return PeriodRelation.EndTouching;
-            if (HasInside (period, test)) {
-                if (test.Start.Ticks == period.Start.Ticks) return PeriodRelation.EnclosingStartTouching;
-                return test.End.Ticks == period.End.Ticks ? PeriodRelation.EnclosingEndTouching : PeriodRelation.Enclosing;
+        
+        public static List<PeriodRelation> GetRelation (ITimePeriod period, ITimePeriod test) {
+            var prList = new List<PeriodRelation> ();
+            try {
+                bool periodContainsMyStart = HasInside (test, period.Start);
+                bool periodContainsMyEnd = HasInside (test, period.End);
+                if (periodContainsMyStart) prList.Add (PeriodRelation.StartInside);
+                if (periodContainsMyEnd) prList.Add (PeriodRelation.EndInside);
+                if (test.End.Ticks < period.Start.Ticks) prList.Add (PeriodRelation.After);
+                if (test.Start.Ticks > period.End.Ticks) prList.Add (PeriodRelation.Before);
+                if (test.Start.Ticks == period.Start.Ticks && test.End.Ticks == period.End.Ticks) prList.Add (PeriodRelation.ExactMatch);
+                if (test.End.Ticks == period.Start.Ticks) prList.Add (PeriodRelation.StartTouching);
+                if (test.Start.Ticks == period.End.Ticks) prList.Add (PeriodRelation.EndTouching);
+                if (HasInside (period, test.Start) && (HasInside (period, test.End))) {
+                    if (test.Start.Ticks == period.Start.Ticks) prList.Add (PeriodRelation.EnclosingStartTouching);
+                    prList.Add (test.End.Ticks == period.End.Ticks ? PeriodRelation.EnclosingEndTouching : PeriodRelation.Enclosing);
+                }
+                if (periodContainsMyStart && periodContainsMyEnd) {
+                    if (test.Start.Ticks == period.Start.Ticks) prList.Add (PeriodRelation.InsideStartTouching);
+                    prList.Add (test.End.Ticks == period.End.Ticks ? PeriodRelation.InsideEndTouching : PeriodRelation.Inside);
+                }
+            } catch {
+                throw new InvalidOperationException ("invalid period relation of '" + period + "' and '" + test + "'");
             }
-            bool periodContainsMyStart = HasInside (test, period.Start);
-            bool periodContainsMyEnd = HasInside (test, period.End);
-            if (periodContainsMyStart && periodContainsMyEnd) {
-                if (test.Start.Ticks == period.Start.Ticks) return PeriodRelation.InsideStartTouching;
-                return test.End.Ticks == period.End.Ticks ? PeriodRelation.InsideEndTouching : PeriodRelation.Inside;
-            }
-            if (periodContainsMyStart) return PeriodRelation.StartInside;
-            if (periodContainsMyEnd) return PeriodRelation.EndInside;
-            throw new InvalidOperationException ("invalid period relation of '" + period + "' and '" + test + "'");
-        } // GetRelation
+            return prList;
+        }
 
     } // class TimePeriodCalc
 
