@@ -26,7 +26,7 @@ namespace Itenso.TimePeriod {
 
         // ----------------------------------------------------------------------      
         public static bool HasInside (ITimePeriod period, DateTime test) {
-            if((test.Ticks >= period.Start.Ticks) && (test.Ticks <= period.End.Ticks)) return true;
+            if ((test.Ticks >= period.Start.Ticks) && (test.Ticks <= period.End.Ticks)) return true;
             return false;
         } // HasInside
 
@@ -52,12 +52,15 @@ namespace Itenso.TimePeriod {
         // ----------------------------------------------------------------------
         public static bool OverlapsWith (ITimePeriod period, ITimePeriod test) {
             var relations = GetRelation (period, test);
-            var unwanted = new List<PeriodRelation> () { PeriodRelation.Before, PeriodRelation.StartTouching, PeriodRelation.EndTouching, PeriodRelation.After };
+            var unwanted = new List<PeriodRelation> () {
+                PeriodRelation.Before,
+                PeriodRelation.After
+            };
             foreach (var r in relations)
                 if (unwanted.Contains (r)) return false;;
             return true;
         } // OverlapsWith
-        
+
         public static List<PeriodRelation> GetRelation (ITimePeriod period, ITimePeriod test) {
             var prList = new List<PeriodRelation> ();
             try {
