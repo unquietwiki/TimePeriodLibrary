@@ -1,6 +1,6 @@
 @echo off
 SETLOCAL
-set source=D:\Projects\TimePeriodLibrary
+set source=%cd%
 set packages=%source%\packages
 set outdir=%source%\bin
 

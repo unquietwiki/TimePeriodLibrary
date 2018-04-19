@@ -1,17 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net35;net40;net45;net46</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <AssemblyName>Itenso.TimePeriod</AssemblyName>
     <RootNamespace>Itenso.TimePeriod</RootNamespace>
-    <Version>2.1.1</Version>
+    <Version>2.2.0</Version>
     <Authors>Jani Giannoudis</Authors>
     <Company/>
     <PackageProjectUrl>http://www.codeproject.com/Articles/168662/Time-Period-Library-for-NET</PackageProjectUrl>
-    <Copyright>(c) 2011-2017 by Jani Giannoudis, Switzerland</Copyright>
+    <Copyright>(c) 2011-2018 by Jani Giannoudis, Switzerland</Copyright>
     <Description>Extensive time period calculations and individual calendar periods.</Description>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageTags>C# ASP.NET Windows .NET Mobile Silverlight C#4.0 Windows-Phone WinForms Date Time Calendar</PackageTags>
-    <PackageReleaseNotes>- Changed target framework to .NETStandard1.6: supporting .NET Core, Mono, Xamarin, UWP&#xD;
+    <PackageReleaseNotes>- Changed target framework to .NETStandard2: supporting .NET Core, Mono, Xamarin, UWP&#xD;
 - Removed support for Silverlight, PCL and WindowsPhone&#xD;
 - Changed testing framework from NUnit to xUnit&#xD;
 - CalendarDateAdd.GetAvailableWeekPeriods is now protected&#xD;
@@ -24,8 +24,8 @@
     <PackageId>TimePeriodLibrary.NET</PackageId>
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>TimePeriodLibrary.snk</AssemblyOriginatorKeyFile>
-    <AssemblyVersion>2.1.1.0</AssemblyVersion>
-    <FileVersion>2.1.1.0</FileVersion>
+    <AssemblyVersion>2.2.0.0</AssemblyVersion>
+    <FileVersion>2.2.0.0</FileVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath/>

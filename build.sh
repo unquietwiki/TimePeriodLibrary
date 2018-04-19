@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source=/usr/src/TimePeriodLibrary
+source=$PWD
 packages=$source/packages
 outdir=$source/bin
 owneruser=username
